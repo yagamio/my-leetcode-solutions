@@ -1,9 +1,9 @@
 /**
  * 75. Sort Colors
- * Quick sort.
+ * Merge sort.
  * n is the length of nums.
  * Time complexity: O(nlogn).
- * Space complexity: O(logn).
+ * Space complexity: O(n).
  */
 class Solution {
     
@@ -12,61 +12,68 @@ class Solution {
         for (int i = 0; i < nums.length; i++) {
             boxedNums[i] = nums[i];
         }
-
-        QuickSort<Integer> sorter = new QuickSort<>();
+        upToDownMerge<Integer> sorter = new upToDownMerge<Integer>();
         sorter.sort(boxedNums);
-
-        for (int i = 0; i < boxedNums.length; i++) {
+        for (int i = 0; i < nums.length; i++) {
             nums[i] = boxedNums[i];
         }
     }
 
-    public class QuickSort<T extends Comparable<T>> extends Sort<T> {
-    
-    public void sort(T[] nums) {
-        shuffle(nums);
-        sort(nums, 0, nums.length - 1);
-    }
-
-    private void sort(T[] nums, int l, int h) {
-        if (l >= h) return;
-        int pivot = partition(nums, l, h);
-        sort(nums, l, pivot - 1);
-        sort(nums, pivot + 1, h);
-    }
-
-    protected int partition(T[] nums, int l, int h) {
-        int i = l, j = h + 1;
-        T v = nums[l];
-        while (true) {
-            while (less(nums[++i], v) && i != h);
-            while (less(v, nums[--j]) && j != l);
-            if (i >= j) break;
-            swap(nums, i, j);
+    public class upToDownMerge<T extends Comparable<T>> extends mergeSort<T> {
+        
+        @Override
+        public void sort(T[] nums) {
+            aux = (T[]) new Comparable[nums.length];
+            sort(nums, 0, nums.length - 1);
         }
-        swap(nums, l, j);
-        return j;
+
+        protected void sort(T[] nums, int l, int h) {
+            if (l >= h) return;
+            int mid = l + (h - l) / 2;
+            sort(nums, l, mid);
+            sort(nums, mid + 1, h);
+            merge(nums, l, mid, h);
+        }
+
     }
 
-    private void shuffle(T[] nums) {
-        List<T> list = Arrays.asList(nums);
-        Collections.shuffle(list);
-        list.toArray(nums);
-    }
-}
-
-    public abstract class Sort<T extends Comparable<T>> {
+    public abstract class mergeSort<T extends Comparable<T>> extends sort<T> {
         
+        protected T[] aux;
+
+        protected void merge(T[] nums, int l, int m, int h) {
+            int i = l, j = m + 1;
+            for (int k = l; k <= h; k++) {
+                aux[k] = nums[k];
+            }
+            for (int k = l; k <= h; k++) {
+                if (i > m) {
+                    nums[k] = aux[j++];
+                } else if (j > h) {
+                    nums[k] = aux[i++];
+                } else if (aux[i].compareTo(aux[j]) <= 0) {
+                    nums[k] = aux[i++];
+                } else {
+                    nums[k] = aux[j++];
+                }
+            }
+        }
+
+    }
+
+    public abstract class sort<T extends Comparable<T>> {
+
         public abstract void sort(T[] nums);
-        
+
         protected boolean less(T v, T w) {
             return v.compareTo(w) < 0;
         }
 
-        protected void swap(T[] nums, int i, int j) {
-            T temp = nums[i];
-            nums[i] = nums[j];
-            nums[j] = temp;
+        protected void swap(T[] a, int i, int j) {
+            T t = a[i];
+            a[i] = a[j];
+            a[j] = t;
         }
+
     }
 }
