@@ -1,9 +1,9 @@
 /**
  * 75. Sort Colors
- * Merge sort.
+ * Bubble sort.
  * n is the length of nums.
- * Time complexity: O(nlogn).
- * Space complexity: O(n).
+ * Time complexity: O(n^2).
+ * Space complexity: O(1).
  */
 class Solution {
     
@@ -12,64 +12,40 @@ class Solution {
         for (int i = 0; i < nums.length; i++) {
             boxedNums[i] = nums[i];
         }
-        upToDownMerge<Integer> sorter = new upToDownMerge<Integer>();
+        bubbleSort sorter = new bubbleSort<Integer>();
         sorter.sort(boxedNums);
         for (int i = 0; i < nums.length; i++) {
             nums[i] = boxedNums[i];
         }
     }
 
-    public class upToDownMerge<T extends Comparable<T>> extends mergeSort<T> {
-        
+    public class bubbleSort<T extends Comparable<T>> extends sort<T> {
+
         @Override
         public void sort(T[] nums) {
-            aux = (T[]) new Comparable[nums.length];
-            sort(nums, 0, nums.length - 1);
-        }
-
-        protected void sort(T[] nums, int l, int h) {
-            if (l >= h) return;
-            int mid = l + (h - l) / 2;
-            sort(nums, l, mid);
-            sort(nums, mid + 1, h);
-            merge(nums, l, mid, h);
-        }
-
-    }
-
-    public abstract class mergeSort<T extends Comparable<T>> extends sort<T> {
-        
-        protected T[] aux;
-
-        protected void merge(T[] nums, int l, int m, int h) {
-            int i = l, j = m + 1;
-            for (int k = l; k <= h; k++) {
-                aux[k] = nums[k];
-            }
-            for (int k = l; k <= h; k++) {
-                if (i > m) {
-                    nums[k] = aux[j++];
-                } else if (j > h) {
-                    nums[k] = aux[i++];
-                } else if (aux[i].compareTo(aux[j]) <= 0) {
-                    nums[k] = aux[i++];
-                } else {
-                    nums[k] = aux[j++];
+            boolean isSorted = false;
+            int N = nums.length;
+            for (int i = N - 1; i > 0 && !isSorted; i--) {
+                isSorted = true;
+                for (int j = 0; j < i; j++) {
+                    if (less(nums[j + 1], nums[j])) {
+                        isSorted = false;
+                        swap(nums, j, j + 1);
+                    }
                 }
             }
         }
-
     }
 
     public abstract class sort<T extends Comparable<T>> {
+        
+        public void sort(T[] nums) {};
 
-        public abstract void sort(T[] nums);
-
-        protected boolean less(T v, T w) {
+        public boolean less(T v, T w) {
             return v.compareTo(w) < 0;
         }
 
-        protected void swap(T[] a, int i, int j) {
+        public void swap(T[] a, int i, int j) {
             T t = a[i];
             a[i] = a[j];
             a[j] = t;
