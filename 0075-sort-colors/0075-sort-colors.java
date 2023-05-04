@@ -1,6 +1,6 @@
 /**
  * 75. Sort Colors
- * Bubble sort.
+ * Insertion sort.
  * n is the length of nums.
  * Time complexity: O(n^2).
  * Space complexity: O(1).
@@ -12,29 +12,26 @@ class Solution {
         for (int i = 0; i < nums.length; i++) {
             boxedNums[i] = nums[i];
         }
-        bubbleSort sorter = new bubbleSort<Integer>();
+        insertionSort sorter = new insertionSort<Integer>();
         sorter.sort(boxedNums);
         for (int i = 0; i < nums.length; i++) {
             nums[i] = boxedNums[i];
         }
     }
 
-    public class bubbleSort<T extends Comparable<T>> extends sort<T> {
+    public class insertionSort<T extends Comparable<T>> extends sort<T> {
 
         @Override
         public void sort(T[] nums) {
-            boolean isSorted = false;
             int N = nums.length;
-            for (int i = N - 1; i > 0 && !isSorted; i--) {
-                isSorted = true;
-                for (int j = 0; j < i; j++) {
-                    if (less(nums[j + 1], nums[j])) {
-                        isSorted = false;
-                        swap(nums, j, j + 1);
-                    }
+            //遍历数组，将每个元素和前面已排序的小数组比较，如果当前值较小则交换
+            for (int i = 1; i < N; i++) {
+                for (int j = i; j > 0 && less(nums[j], nums[j - 1]); j--) {
+                    swap(nums, j, j - 1);
                 }
             }
         }
+
     }
 
     public abstract class sort<T extends Comparable<T>> {
