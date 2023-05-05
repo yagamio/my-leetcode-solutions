@@ -37,7 +37,7 @@ class Solution {
                 } else if (compare > 0) {
                     swap(nums, i, gt--);
                 } else {
-                    swap(nums, i++, lt++);
+                    swap(nums, i, lt++);
                 }
             }
             sort(nums, l, lt - 1);
