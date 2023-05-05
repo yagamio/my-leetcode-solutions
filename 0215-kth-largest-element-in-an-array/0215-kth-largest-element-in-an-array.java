@@ -1,25 +1,52 @@
 /**
  * 215. Kth Largest Element in an Array
- * Heap.
- * n is the size of nums.
- * Time complexity: O(nlongk).
- * Space complexity: O(k).
+ * Quick select (partition method from quick sort).
+ * n is the length of nums.
+ * Time complexity: O(n).
+ * Space complexity: O(1).
  */
 class Solution {
-    /**
-     * Use max heap to get the top k smallest elements.
-     * Add numbers to max heap, keep the size of heap to k.
-     * If size > k, remove the top element.  So the heap always keeps k smallest elements.
-     * Return the top in the end, which is the kth largest number.
-     */
     public int findKthLargest(int[] nums, int k) {
-        PriorityQueue<Integer> pq = new PriorityQueue<>();
-        for (int num : nums) {
-            pq.add(num);
-            if (pq.size() > k) {
-                pq.poll();
+        return quickSelect(nums, k);
+    }
+
+    protected int quickSelect(int[]nums, int k) {
+        // partition中求出的是第j小的数，而不是第j大，所以要先转换成第x小
+        // 数组中，第j大即为第nums.length - j小
+        int x = nums.length - k;
+        int l = 0, h = nums.length - 1;
+        while (h > l) {
+            int j = partition(nums, l, h);
+            if (j == x) {
+                break;
+            } else if (j > x) {
+                h = j - 1;
+            } else {
+                l = j + 1;
             }
         }
-        return pq.peek();
+        return nums[x];
+    }
+
+    protected int partition(int[] nums, int l, int h) {
+        int i = l, j = h + 1;
+        while (true) {
+            while (less(nums[++i], nums[l]) && i != h);
+            while (less(nums[l], nums[--j]) && j != l);
+            if (i >= j) break;
+            swap(nums, i, j);
+        }
+        swap(nums, l, j);
+        return j;
+    }
+
+    protected boolean less(int v, int w) {
+        return v < w;
+    }
+
+    protected void swap(int[] nums, int i, int j) {
+        int t = nums[i];
+        nums[i] = nums[j];
+        nums[j] = t;
     }
 }
