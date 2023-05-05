@@ -1,8 +1,8 @@
 /**
  * 75. Sort Colors
- * Insertion sort.
+ * Shell.
  * n is the length of nums.
- * Time complexity: O(n^2).
+ * Time complexity: O(n^(4/3)).
  * Space complexity: O(1).
  */
 class Solution {
@@ -12,23 +12,29 @@ class Solution {
         for (int i = 0; i < nums.length; i++) {
             boxedNums[i] = nums[i];
         }
-        insertionSort sorter = new insertionSort<Integer>();
+        Shell sorter = new Shell<Integer>();
         sorter.sort(boxedNums);
         for (int i = 0; i < nums.length; i++) {
             nums[i] = boxedNums[i];
         }
     }
 
-    public class insertionSort<T extends Comparable<T>> extends sort<T> {
+    public class Shell<T extends Comparable<T>> extends sort<T> {
 
         @Override
         public void sort(T[] nums) {
             int N = nums.length;
-            //遍历数组，将每个元素和前面已排序的小数组比较，如果当前值较小则交换
-            for (int i = 1; i < N; i++) {
-                for (int j = i; j > 0 && less(nums[j], nums[j - 1]); j--) {
-                    swap(nums, j, j - 1);
+            int h = 1;
+            while (h < N / 3) {
+                h = 3 * h + 1;
+            }
+            while (h >= 1) {
+                for (int i = h; i < N; i++) {
+                    for (int j = i; j >= h && less(nums[j], nums[j - h]); j -= h) {
+                        swap(nums, j, j - h);
+                    }
                 }
+                h = h / 3;
             }
         }
 
