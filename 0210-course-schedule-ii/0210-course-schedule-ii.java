@@ -37,7 +37,7 @@ class Solution {
         while (!queue.isEmpty()) {
             int course = queue.poll();
             result[index++] = course; // 注意这里将int添加到int数组的方式，是通过下标，而不是append
-           completeCourses++;
+            completeCourses++;
             for (int nextCourse : outEdges.get(course)) {
                 indegree[nextCourse]--;
                 if (indegree[nextCourse] == 0) {
