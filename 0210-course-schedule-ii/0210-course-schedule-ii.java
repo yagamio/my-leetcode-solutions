@@ -1,53 +1,66 @@
 /**
  * 210. Course Schedule II
- * n is the number of courses. m is the number of prerequisites.
- * Time complexity: O(n + m).
- * Space complexity: O(n + m).
+ * DFS ---> topology sort of graph.
+ * v is the number of courses. e is the number of prerequisites.
+ * Time complexity: O(v + e).
+ * Space complexity: O(v + e).
  */
-class Solution {
-    
+class Solution {        
+
     public int[] findOrder(int numCourses, int[][] prerequisites) {
-        
-        // create an adjacency list to store the outgoing edges.
-        List<List<Integer>> outEdges = new ArrayList<>();
+        // Create a graph
+        List<List<Integer>> graph = new ArrayList<>();
         for (int i = 0; i < numCourses; i++) {
-            outEdges.add(new ArrayList<>());
-        }
-        int[] indegree = new int[numCourses]; // new int array to store indegree.
-
-        // fill in outEdges and indegree by iterating prerequisites.
-        for (int[] pre : prerequisites) {
-            int courseA = pre[0];
-            int courseB = pre[1];
-            outEdges.get(courseB).add(courseA);
-            indegree[courseA]++;
+            graph.add(new ArrayList<>()); // !!! Not "graph.get(i).add()"
         }
 
-        Queue<Integer> queue = new LinkedList<>();
+        // Store subsequent courses in the graph
+        for (int[] prerequisite : prerequisites) {
+            int courseA = prerequisite[0];
+            int courseB = prerequisite[1];
+            graph.get(courseB).add(courseA);
+        }
+
+        // Array to store the status of course
+        // 0 for not visited; 1 for visting; 2 for visited
+        int[] visited = new int[numCourses];
         for (int i = 0; i < numCourses; i++) {
-            if (indegree[i] == 0) {
-                queue.add(i);
+            visited[i] = 0;
+        }
+
+        // Store visited courses in a stack
+        Deque<Integer> stack = new ArrayDeque<>();
+
+        // Check if each course can be studied (if circle exists)
+        for (int i = 0; i < numCourses; i++) {
+            if (visited[i] == 0 && hasCircle(i, visited, graph, stack)) {
+                return new int[0];
             }
         }
 
-        int[] result = new int[numCourses];
-        int index = 0;
-        int completeCourses = 0;
-        
-        while (!queue.isEmpty()) {
-            int course = queue.poll();
-            result[index++] = course; // 注意这里将int添加到int数组的方式，是通过下标，而不是append
-            completeCourses++;
-            for (int nextCourse : outEdges.get(course)) {
-                indegree[nextCourse]--;
-                if (indegree[nextCourse] == 0) {
-                    queue.add(nextCourse);
-                }
+        // Transfer courses from stack to result array
+        int[] order = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            while (!stack.isEmpty()) {
+                order[i++] = stack.pop();
             }
         }
 
-        if (completeCourses != numCourses) return new int[0];
-        return result;
+        return order;
+    }
+
+    private boolean hasCircle(int course, int[] visited, List<List<Integer>> graph, Deque<Integer> stack) {
+        visited[course] = 1; // Set status as visiting
+        
+        // Check subsequent courses by recursion
+        for (int nextCourse : graph.get(course)) {
+            if (visited[nextCourse] == 1) return true; // If visited, circle exists
+            if (visited[nextCourse] == 0 && hasCircle(nextCourse, visited, graph, stack)) return true;
+        }
+        visited[course] = 2;
+        stack.push(course);
+        
+        return false;
     }
 
 }
