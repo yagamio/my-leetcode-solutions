@@ -13,14 +13,20 @@ class Solution {
             l++;
             r--;
         }
+        // first time left != right
         if (l >= r) return true;
-        int p = l, q = r; // remember l and r
+        
+        int p = l, q = r; // remember the index of l and r
+        
+        // delete left, check if the rest of string meets requirements
         l++;
         while (l <= r && s.charAt(l) == s.charAt(r)) {
             l++;
             r--;
         }
         if (l >= r) return true;
+        
+        // if not, then delete right and check
         l = p;
         r = q - 1;
         while (l <= r && s.charAt(l) == s.charAt(r)) {
@@ -28,6 +34,7 @@ class Solution {
             r--;
         }
         if (l >= r) return true;
+        
         return false;
     }
 }
