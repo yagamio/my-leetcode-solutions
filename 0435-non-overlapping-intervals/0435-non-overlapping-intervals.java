@@ -2,7 +2,7 @@
  * 435. Non-overlapping Intervals
  * Greedy
  * N is the number of intervals
- * Time complexity: O(N)
+ * Time complexity: O(NlogN), sort
  * Space complexity: O(1)
  */
 class Solution {
