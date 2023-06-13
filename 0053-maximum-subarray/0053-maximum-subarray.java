@@ -6,13 +6,15 @@
  */
 class Solution {
     public int maxSubArray(int[] nums) {
-        int[] dp = new int[nums.length];
-        dp[0] = nums[0];
-        int result = dp[0];
+        // create an array to store the max sum of subarray for each element of nums
+        int[] maxSums = new int[nums.length];
+        maxSums[0] = nums[0];
+        int result = maxSums[0];
 
         for (int i = 1; i < nums.length; i++) {
-            dp[i] = Math.max(dp[i-1] + nums[i], nums[i]);
-            result = Math.max(result, dp[i]);
+            // for each element, the max sum is either itself, or add itself to previous sum
+            maxSums[i] = Math.max(maxSums[i-1] + nums[i], nums[i]);
+            result = Math.max(result, maxSums[i]);
         }
 
         return result;
