@@ -1,6 +1,6 @@
 /**
  * 69. Sqrt(x)
- * Binary search
+ * Blue & Red / Binary search
  * N is the value of int x
  * Time complexity: O(logN)
  * Space complexity: O(1)
@@ -10,17 +10,22 @@ class Solution {
         if (x <= 1) {
             return x;
         }
-        int l = 1, h = x;
-        while (l <= h) {
-            int m = l + (h - l) / 2;
-            if (m == x / m) {
-                return m;
-            } else if (m < x / m) {
-                l = m + 1;
+        
+        int left = 1; // points to blue area, normally left = -1
+        int right = x;  // points to red area, normally right = N
+        
+        while (left + 1 != right) {
+            int mid = left + ((right - left) >> 1);
+            
+            // isBlue = mid * mid <= x;
+            // if isBlue(mid), then expand blue area(left) to mid
+            if (mid <= x / mid) {
+                left = mid;
+                // if not isBlue(mid), then expand red area(right) to mid
             } else {
-                h = m - 1;
+                right = mid;
             }
         }
-        return h;
+        return left; // return blue
     }
 }
