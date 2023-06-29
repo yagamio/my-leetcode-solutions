@@ -17,9 +17,9 @@
 /**
  * 257. Binary Tree Paths
  * Backtracking. DFS.
- * H is the height of root
- * Time complexity: O(2^H)
- * Space complexity: O(2^H)
+ * N is the number of nodes
+ * Time complexity: O(N)
+ * Space complexity: O(N)
  */
 class Solution {
     public List<String> binaryTreePaths(TreeNode root) {
