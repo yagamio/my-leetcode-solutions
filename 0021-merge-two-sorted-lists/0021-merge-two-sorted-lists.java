@@ -22,15 +22,12 @@ class Solution {
         while (list1 != null && list2 != null) {
             if (list2.val <= list1.val) {
                 cur.next = list2;
-                cur = cur.next;
                 list2 = list2.next;
-                cur.next = null;
             } else {
                 cur.next = list1;
-                cur = cur.next;
                 list1 = list1.next;
-                cur.next = null;
             }
+            cur = cur.next;
         }
         if (list1 == null) {
             cur.next = list2;
