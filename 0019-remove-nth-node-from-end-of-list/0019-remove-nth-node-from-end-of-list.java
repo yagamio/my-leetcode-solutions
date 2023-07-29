@@ -28,7 +28,7 @@ class Solution {
         ListNode dummy = new ListNode(-1);
         dummy.next = head;
         ListNode pre = dummy;
-        int count = 1;
+        int count = 1; // when count == target, head points to the node to be deleted
         while (count < target) {
             head = head.next;
             pre = pre.next;
