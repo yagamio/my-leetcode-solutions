@@ -16,31 +16,31 @@
 
 /**
  * 437. Path Sum III
- * Recursion
+ * Prefix sum, hash map, backtracking
  * Time complexity: O(N)
  * Space complexity: O(H)
  */
 class Solution {
-    public int pathSum(TreeNode root, int targetSum) {
-        if (root == null) return 0;
-        // 前序遍历，根左右
-        int pathsRoot = pathSumStartWithRoot(root, (long)targetSum);
-        int pathsLeft = pathSum(root.left, targetSum);
-        int pathsRight = pathSum(root.right, targetSum);
-        return pathsRoot + pathsLeft + pathsRight;
-    }
+    int result = 0;
+    int targetSum;
+    Map<Long, Integer> map = new HashMap<>();
 
-    private int pathSumStartWithRoot(TreeNode root, long sum) {
-        if (root == null) return 0;
-        int result = 0;
-        // 处理根节点，由于不限制起始位置，只要相等，就多一条路
-        if (root.val == sum) {
-            result++;
-        }
-        // 递归处理左右节点
-        int left = pathSumStartWithRoot(root.left, sum - root.val);
-        int right = pathSumStartWithRoot(root.right, sum - root.val);
-        result = result + left + right;
+    public int pathSum(TreeNode root, int sum) {
+        this.targetSum = sum;
+        map.put((long)0, 1);
+        backtrack(root, (long)0);
         return result;
+    }
+    
+    private void backtrack(TreeNode root, long sum) {
+        if (root == null) return;
+        sum += root.val;
+        if ( map.containsKey(sum - targetSum) && map.get(sum - targetSum) >= 1 ) {
+            result += map.get(sum - targetSum);
+        }
+        map.put(sum, map.getOrDefault(sum, 0) + 1);
+        backtrack(root.left, sum);
+        backtrack(root.right, sum);
+        map.put(sum, map.get(sum) - 1);
     }
 }
