@@ -17,7 +17,9 @@
 /**
  * 572. Subtree of Another Tree
  * Recursion
- * Time complexity: O(N^2)
+ * N is the number of nodes of root.
+ * M is the number of nodes of subRoot.
+ * Time complexity: O(N * M)
  * Space complexity: O(H)
  */
 class Solution {
