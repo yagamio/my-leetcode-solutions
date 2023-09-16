@@ -44,12 +44,10 @@ class MapSum {
 
 class TrieNode {
     Map<Character, TrieNode> children;
-    boolean endOfWord;
     int val;
     
     public TrieNode() {
         children = new HashMap<>();
-        endOfWord = false;
         val = 0;
     }
 }
