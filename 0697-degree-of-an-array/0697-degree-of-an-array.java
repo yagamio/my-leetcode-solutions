@@ -12,6 +12,7 @@ class Solution {
         for (int i = 0; i < nums.length; i++) {
             int cur = nums[i];
             if (!map.containsKey(cur)) {
+                // array[0] = frequency, array[1] = 1st index, array[2] = last index
                 map.put(cur, new int[] {1, i, i});
             } else {
                 int[] array = map.get(nums[i]);
